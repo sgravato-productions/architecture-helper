@@ -1,52 +1,12 @@
-import java.awt.*; 
+package org.architecture_helper.gui;
+
+import org.architecture_helper.gui.PipelineDrawerTab;
+
+import java.awt.*;
 import javax.swing.*;
 
-class pipelineDrawerTab extends JPanel {
-	JLabel lblSource;
-	JLabel lblResult;
-	JTextArea taSourceCode;
-	JTextArea taResult;
 
-	public pipelineDrawerTab() {
-		lblSource = new JLabel("Source:");
-		lblResult = new JLabel("Result:");
-		taSourceCode = new JTextArea(20, 5);
-		taResult = new JTextArea(20, 5);
-
-		setLayout(new GridLayout(5, 1));
-
-		add(lblSource);
-		add(taSourceCode);
-		add(lblResult);
-		add(taResult);
-		add(new JButton("RUN"));    	
-	}
-}
-
-class addressHitAndMissTab extends JPanel {
-	private JLabel lblInput;
-	private JLabel lblAddresses;
-	private JLabel lblCacheType;
-	private JLabel lblCacheSets;
-	private JLabel lblBlockSize;
-	private JLabel lblResult;
-
-	public addressHitAndMissTab() {
-		lblInput = new JLabel("Source:");
-		lblAddresses = new JLabel("Addresses:");
-		lblCacheType = new JLabel("Cache Type:");
-		lblCacheSets = new JLabel("Sets:");
-		lblBlockSize = new JLabel("Block size:");
-		lblResult = new JLabel("Result:");
-
-		
-		add(new JTextArea(10, 20));
-		add(new JButton("RUN"));
-	}
-}
-
-
-class MagicGUI {
+public class MagicGUI {
 	final static String PIPELINE = "Pipeline Drawer";
     final static String ADDRESSHM = "Address Hit / Miss";
 
@@ -54,8 +14,8 @@ class MagicGUI {
 	public static void addComponentToPane(Container pane) {
         JTabbedPane tabbedPane = new JTabbedPane();
  
-        tabbedPane.addTab(PIPELINE, new pipelineDrawerTab());
-        tabbedPane.addTab(ADDRESSHM, new addressHitAndMissTab());
+        tabbedPane.addTab(PIPELINE, new PipelineDrawerTab());
+        tabbedPane.addTab(ADDRESSHM, new AddressHitAndMissTab());
  
         pane.add(tabbedPane, BorderLayout.CENTER);
     }        
