@@ -1,4 +1,4 @@
-﻿package org.architecture_helper.backend;
+package org.architecture_helper.backend;
 
 import java.util.Arrays;
 import java.util.Collections;

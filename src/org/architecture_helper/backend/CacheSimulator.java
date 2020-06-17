@@ -1,4 +1,4 @@
-﻿package org.architecture_helper.backend;
+package org.architecture_helper.backend;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ class CacheSimulator {
     public Object[] find(int address) {
         //calculating memory block and cache block index
         int memBlock = calculateMemBlock(address);
-        int index = calculatecacheSet(-1, memBlock);
+        int index = calculateCacheSet(-1, memBlock);
 
         List<Integer> cacheSet = cacheSets.get(index);
 
@@ -62,7 +62,7 @@ class CacheSimulator {
         return address / blockSize;
     }
 
-    public int calculatecacheSet(int address, int memBlock) {
+    public int calculateCacheSet(int address, int memBlock) {
         if (address != -1) {
             memBlock = calculateMemBlock(address);
         }
