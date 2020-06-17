@@ -3,38 +3,51 @@ package org.architecture_helper.gui;
 import org.architecture_helper.gui.PipelineDrawerTab;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 
-public class MagicGUI {
-	final static String PIPELINE = "Pipeline Drawer";
-    final static String ADDRESSHM = "Address Hit / Miss";
+public class MagicGUI extends JFrame {
+	private final JTabbedPane tabbedPane = new JTabbedPane();
+	private final JButton runButton;
 
+   	public MagicGUI() {
+   		//region FRAME
+      	super("Architecture Helper");
+		setSize(950, 700);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	public static void addComponentToPane(Container pane) {
-        JTabbedPane tabbedPane = new JTabbedPane();
- 
-        tabbedPane.addTab(PIPELINE, new PipelineDrawerTab());
-        tabbedPane.addTab(ADDRESSHM, new AddressHitAndMissTab());
- 
-        pane.add(tabbedPane, BorderLayout.CENTER);
-    }        
+		setLocationByPlatform(true);
 
-	// components
-   	private static void createAndShowGui() {
-      	JFrame frame = new JFrame("architecture-helper");
+		setVisible(true);
+		//endregion
 
-		//Create and set up the content pane.
-        addComponentToPane(frame.getContentPane());
-        
-      	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      	frame.pack();
-      	frame.setLocationByPlatform(true);
-      	frame.setVisible(true);
-      	frame.setSize(950, 700);
+		//region BUILDING GUI
+		//setting the content pane layout
+		Container contentPane = getContentPane();
+      	contentPane.setLayout(new BorderLayout());
+
+      	//creating the tab control and the tabs
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
+
+		tabbedPane.addTab("Pipeline Drawer", new PipelineDrawerTab());
+		tabbedPane.addTab("Address Hit / Miss", new AddressHitAndMissTab());
+
+		//creating the run button
+		runButton = new JButton("Run");
+		contentPane.add(runButton, BorderLayout.SOUTH);
+		//endregion
+
+		//region HOOKING EVENTS
+		runButton.addActionListener(runButtonEvent);
+		//endregion
    	}
 
+   	public final ActionListener runButtonEvent = event ->{
+		//tabbedPane.getSelectedComponent().run();
+	};
+
     public static void main (String[] args) {
-    	createAndShowGui();
+    	new MagicGUI();
   	}
 }
