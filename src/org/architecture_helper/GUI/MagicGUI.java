@@ -44,7 +44,7 @@ public class MagicGUI extends JFrame {
    	}
 
    	public final ActionListener runButtonEvent = event ->{
-		//tabbedPane.getSelectedComponent().run();
+		((RunnableTab)tabbedPane.getSelectedComponent()).run();
 	};
 
     public static void main (String[] args) {

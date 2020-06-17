@@ -3,7 +3,7 @@ package org.architecture_helper.gui;
 import javax.swing.*;
 import java.awt.*;
 
-public class PipelineDrawerTab extends JPanel {
+public class PipelineDrawerTab extends RunnableTab{
 	JLabel lblSource;
 	JLabel lblResult;
 	JTextArea taSourceCode;
@@ -21,6 +21,10 @@ public class PipelineDrawerTab extends JPanel {
 		add(taSourceCode);
 		add(lblResult);
 		add(taResult);
-		add(new JButton("RUN"));
+	}
+
+	@Override
+	public void run() {
+		System.out.println("STARTING PIPELINE DRAW");
 	}
 }
