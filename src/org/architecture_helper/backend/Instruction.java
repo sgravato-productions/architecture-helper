@@ -3,7 +3,7 @@ package org.architecture_helper.backend;
 import java.util.ArrayList;
 import java.util.List;
 
-class Instruction {
+public class Instruction {
 
     public final String name;
 

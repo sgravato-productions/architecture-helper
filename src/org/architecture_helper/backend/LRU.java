@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class LRU {
+public class LRU {
     private List<Integer> values;
     private int lastIndex;
 
