@@ -25,11 +25,11 @@ public class PipelineDrawerTab extends RunnableTab{
 	//endregion
 
 	//region Functionality
-	private final String spaces = "      ";
+	private final String spaces = "     ";
 	private final String instructionSpaces = " ".repeat(extendInstruction("").length());
 
 	private String currentLine = "";
-	private String depedencyLine = "";
+	private String dependencyLine = "";
 	//endregion
 
 
@@ -85,23 +85,23 @@ public class PipelineDrawerTab extends RunnableTab{
 		int indentation = 0;
 		for(Instruction instruction : instructions) {
 			currentLine = "";
-			depedencyLine = "";
+			dependencyLine = "";
 
 			boolean forwarding = prevInstruction != null && (instruction.regRead && prevInstruction.regWrite && instruction.rs.contains(prevInstruction.rd));
 			boolean stall = forwarding && prevInstruction.memRead;
 
 			square("IF");
 			if (stall) {
-				square("ID", null, "()");
+				square("ID", null, "<>");
 			}
 			square("ID");
 			square("EX", forwarding ? "\\" : null);
 			square("M ");
-			square("WB");
+			square("WB", false);
 
 			String indentationSpaces = spaces.repeat(indentation);
 
-			output(instructionSpaces + indentationSpaces + depedencyLine);
+			output(instructionSpaces + indentationSpaces + dependencyLine);
 			output(extendInstruction(instruction.name) + indentationSpaces + currentLine);
 
 			prevInstruction = instruction;
@@ -111,14 +111,30 @@ public class PipelineDrawerTab extends RunnableTab{
 	}
 
 	private void square(String phase){
-		square(phase, null, "||");
+		square(phase, null);
 	}
+	private void square(String phase, boolean separator){
+		square(phase, null, separator);
+	}
+
 	private void square(String phase, String dependencies){
-		square(phase, dependencies, "||");
+		square(phase, dependencies, "||", true);
 	}
-	private void square(String phase, String dependencies, String square) {
-		currentLine += "" + square.charAt(0) + square.charAt(0) + phase + square.charAt(1) + square.charAt(1);
-		depedencyLine += (dependencies == null) ? spaces : dependencies;
+	private void square(String phase, String dependencies, boolean separator){
+		square(phase, dependencies, "||", separator);
+	}
+
+	private void square(String phase, String dependencies, String square){
+		square(phase, dependencies, square, true);
+	}
+	private void square(String phase, String dependencies, String square, boolean separator) {
+		currentLine += "" + square.charAt(0) + phase + square.charAt(1) + (separator ? '-':' ');
+		if(dependencies != null){
+			dependencyLine = dependencyLine.substring(0,dependencyLine.length()-1) + dependencies;
+		}else{
+			dependencyLine += spaces;
+		}
+
 	}
 
 	private void output(String output) {
