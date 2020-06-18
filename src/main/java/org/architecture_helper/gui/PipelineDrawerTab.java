@@ -5,6 +5,7 @@ import org.architecture_helper.backend.Instruction;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PipelineDrawerTab extends RunnableTab{
@@ -27,8 +28,7 @@ public class PipelineDrawerTab extends RunnableTab{
 	private final String spaces = "     ";
 	private final String instructionSpaces = new String(new char[extendInstruction("").length()]).replace("\0", " ");
 
-	private String currentLine = "";
-	private String dependencyLine = "";
+	private ArrayList<String> lines = new ArrayList<>();
 	//endregion
 
 
@@ -71,6 +71,11 @@ public class PipelineDrawerTab extends RunnableTab{
 
 	@Override
 	public void run() {
+		//clearing previous execution data
+		lines.clear();
+		taResult.setText("");
+
+		//region parsing instructions
 		List<Instruction> instructions = new ArrayList<>();
 
 		for(String line : taSourceCode.getText().split("\n")) {
@@ -80,62 +85,87 @@ public class PipelineDrawerTab extends RunnableTab{
 			instructions.add(new Instruction(line));
 		}
 
-		Instruction prevInstruction = null;
-		
-		taResult.setText("");
+		//endregion
+
+		LinkedList<Instruction> prevInstructions = new LinkedList<>();
+		prevInstructions.add(null);
+		prevInstructions.add(null);
+
+		boolean previousStall = false;
 
 		int indentation = 0;
 		for(Instruction instruction : instructions) {
-			currentLine = "";
-			dependencyLine = "";
+			String indentationSpaces = new String(new char[indentation]).replace("\0", spaces);
 
-			boolean forwarding = prevInstruction != null && (instruction.regRead && prevInstruction.regWrite && instruction.rs.contains(prevInstruction.rd));
-			boolean stall = forwarding && prevInstruction.memRead;
+			lines.add(instructionSpaces + indentationSpaces);
+			lines.add(extendInstruction(instruction.name) + indentationSpaces);
+
+			boolean forwardingMemToEx = instruction.checkDependency(prevInstructions.get(0));
+			boolean forwardingWbToEx = instruction.checkDependency(prevInstructions.get(1));
+
+			boolean stall = !previousStall && forwardingMemToEx && prevInstructions.get(0).memRead;
 
 			square("IF");
 			if (stall) {
-				square("ID", null, "<>");
+				square("ID", "<>");
 			}
 			square("ID");
-			square("EX", forwarding ? "\\" : null);
+			if(forwardingMemToEx){
+				lines.set(lines.size()-2, lines.get(lines.size()-2) + "\\");
+			} else if(forwardingWbToEx){
+				int slashPosition = lines.get(lines.size()-2).length() -1;
+				lines.set(lines.size()-1, insertChatAt(slashPosition, lines.get(lines.size()-1), '\\'));
+				lines.set(lines.size()-2, insertChatAt(slashPosition, lines.get(lines.size()-2), '|'));
+				lines.set(lines.size()-3, insertChatAt(slashPosition, lines.get(lines.size()-3), '|'));
+				lines.set(lines.size()-4, insertChatAt(slashPosition, lines.get(lines.size()-4), '|'));
+				lines.set(lines.size()-5, insertChatAt(slashPosition, lines.get(lines.size()-5), '\\'));
+			}
+
+			square("EX");
 			square("M ");
 			square("WB", false);
 
-			String indentationSpaces = new String(new char[indentation]).replace("\0", spaces);
+			//preparing data for next iteration
+			prevInstructions.add(0,instruction);
+			prevInstructions.removeLast();
+			previousStall = stall;
 
-			output(instructionSpaces + indentationSpaces + dependencyLine);
-			output(extendInstruction(instruction.name) + indentationSpaces + currentLine);
-
-			prevInstruction = instruction;
 			indentation += stall ? 2 : 1;
 		}
 
+		//outputting lines to taResult
+		taResult.setText(String.join("\r\n", lines));
+
+	}
+
+	private String insertChatAt(int slashPosition, String line, char character) {
+		//inserting \ in the middle of the string
+		if (line.length() > slashPosition){
+			return line.substring(0,slashPosition) + character + line.substring(slashPosition+1);
+		}else if(line.length() < slashPosition){
+			//extending the line of slashPosition - line.length() spaces
+			line += new String(new char[slashPosition - line.length()]).replace(' ',' ');
+		}
+		return  line + character;
 	}
 
 	private void square(String phase){
-		square(phase, null);
+		square(phase, "||");
 	}
 	private void square(String phase, boolean separator){
-		square(phase, null, separator);
+		square(phase, "||", separator);
 	}
 
-	private void square(String phase, String dependencies){
-		square(phase, dependencies, "||", true);
+	private void square(String phase, String square){
+		square(phase, square, true);
 	}
-	private void square(String phase, String dependencies, boolean separator){
-		square(phase, dependencies, "||", separator);
-	}
+	private void square(String phase, String square, boolean separator) {
+		//drawing current line
+		String pipelineStage = "" + square.charAt(0) + phase + square.charAt(1) + (separator ? '-':' ');
+		lines.set(lines.size()-1, lines.get(lines.size()-1) + pipelineStage);
 
-	private void square(String phase, String dependencies, String square){
-		square(phase, dependencies, square, true);
-	}
-	private void square(String phase, String dependencies, String square, boolean separator) {
-		currentLine += "" + square.charAt(0) + phase + square.charAt(1) + (separator ? '-':' ');
-		if(dependencies != null){
-			dependencyLine = dependencyLine.substring(0,dependencyLine.length()-1) + dependencies;
-		}else{
-			dependencyLine += spaces;
-		}
+		//drawing previous line (dependencies)
+		lines.set(lines.size()-2, lines.get(lines.size()-2) + spaces);
 
 	}
 
