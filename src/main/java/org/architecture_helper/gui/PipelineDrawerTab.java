@@ -81,6 +81,9 @@ public class PipelineDrawerTab extends RunnableTab{
 		}
 
 		Instruction prevInstruction = null;
+		
+		taResult.setText("");
+
 		int indentation = 0;
 		for(Instruction instruction : instructions) {
 			currentLine = "";
