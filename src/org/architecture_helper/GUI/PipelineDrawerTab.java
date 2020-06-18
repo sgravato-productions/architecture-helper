@@ -8,12 +8,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PipelineDrawerTab extends RunnableTab{
-	//region
+	//region GUI
+	private final String CODE = "lw s3, 4(s3)\n" +
+			"add s3, s0, s1\n" +
+			"lw t4, 8(s3)\n" +
+			"sw t4, 8(t1)\n" +
+			"add t7, t4, t1\n" +
+			"lw t2, 8(t7)\n" +
+			"add t2, t2, t1\n" +
+			"add t2, t2, t7";
+
 	JTextArea taSourceCode;
 	JTextArea taResult;
 
 	private final Font textAreasFont = new Font("monospaced", Font.PLAIN, 12);
 	//endregion
+
+	//region Functionality
+	private final String spaces = "      ";
+	private final String instructionSpaces = " ".repeat(extendInstruction("").length());
+
+	private String currentLine = "";
+	private String depedencyLine = "";
+	//endregion
+
 
 	public PipelineDrawerTab() {
 		setLayout(new BorderLayout());
@@ -23,7 +41,7 @@ public class PipelineDrawerTab extends RunnableTab{
 
 		topPanel.add(new JLabel("Source:"), BorderLayout.NORTH);
 
-		taSourceCode = new JTextArea();
+		taSourceCode = new JTextArea(CODE);
 		taSourceCode.setFont(textAreasFont);
 		topPanel.add(new JScrollPane(taSourceCode), BorderLayout.CENTER);
 		//endregion
@@ -57,6 +75,67 @@ public class PipelineDrawerTab extends RunnableTab{
 
 	@Override
 	public void run() {
+		List<Instruction> instructions = new ArrayList<>();
 
+		for(String line : taSourceCode.getText().split("\n")) {
+			line = line.trim();
+			if ( line.length() == 0 || line.charAt(0) == '#') continue;
+
+			instructions.add(new Instruction(line));
+		}
+
+		Instruction prevInstruction = null;
+		int indentation = 0;
+		for(Instruction instruction : instructions) {
+			currentLine = "";
+			depedencyLine = "";
+
+			boolean forwarding = prevInstruction != null && (instruction.regRead && prevInstruction.regWrite && instruction.rs.contains(prevInstruction.rd));
+			boolean stall = forwarding && prevInstruction.memRead;
+
+			square("IF");
+			if (stall) {
+				square("ID", null, "()");
+			}
+			square("ID");
+			square("EX", forwarding ? "\\" : null);
+			square("M ");
+			square("WB");
+
+			String indentationSpaces = spaces.repeat(indentation);
+
+			output(instructionSpaces + indentationSpaces + depedencyLine);
+			output(extendInstruction(instruction.name) + indentationSpaces + currentLine);
+
+			prevInstruction = instruction;
+			indentation += stall ? 2 : 1;
+		}
+
+	}
+
+	private void square(String phase){
+		square(phase, null, "||");
+	}
+	private void square(String phase, String dependencies){
+		square(phase, dependencies, "||");
+	}
+	private void square(String phase, String dependencies, String square) {
+		currentLine += "" + square.charAt(0) + square.charAt(0) + phase + square.charAt(1) + square.charAt(1);
+		depedencyLine += (dependencies == null) ? spaces : dependencies;
+	}
+
+	private void output(String output) {
+		output(output, "\r\n");
+	}
+	private void output(String output, String end) {
+		taResult.setText(taResult.getText() + output + end);
+	}
+
+	private String extendInstruction(String instruction) {
+		return extendInstruction(instruction, 5);
+	}
+
+	private String extendInstruction(String instruction, int len) {
+		return instruction + ":" + " ".repeat(len - instruction.length());
 	}
 }
