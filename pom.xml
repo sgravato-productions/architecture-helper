@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>org.architecture-helper</artifactId>
-    <version>0.3.1A</version>
+    <version>0.3.1B</version>
     <build>
         <plugins>
             <plugin>
