@@ -99,4 +99,10 @@ public class Instruction {
                 ", memRead=" + memRead +
                 '}';
     }
+
+    public boolean checkDependency(Instruction previousInstruction) {
+        if (previousInstruction == null) return false;
+        return this.regRead && previousInstruction.regWrite && this.rs.contains(previousInstruction.rd);
+    }
+
 }
