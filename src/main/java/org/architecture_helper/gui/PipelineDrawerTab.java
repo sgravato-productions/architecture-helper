@@ -148,6 +148,6 @@ public class PipelineDrawerTab extends RunnableTab{
 	}
 
 	private String extendInstruction(String instruction, int len) {
-		return new String(new char[len - instruction.length()]).replace("\0", ":" + " ");
+		return instruction + ":" + new String(new char[len - instruction.length()]).replace("\0", " ");
 	}
 }
