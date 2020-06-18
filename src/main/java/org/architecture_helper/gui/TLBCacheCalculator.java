@@ -92,7 +92,7 @@ public class TLBCacheCalculator extends RunnableTab {
 
         //region radioButtons
         constraints.gridy++;
-        JPanel rbPanel = new JPanel(new FlowLayout());
+        JPanel rbPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         programDataPanel.add(rbPanel, constraints);
 
         JButton rbVector = new JButton("Vector");
@@ -136,31 +136,34 @@ public class TLBCacheCalculator extends RunnableTab {
         //getting data from UI
         int numberOfElements = (int) spNumberOfElements.getValue();
 
+        String output = "";
+        //calculating memory Accesses
+        int memoryAccesses = numberOfElements * (int) spMemoryAccesses.getValue();
+        output += "MEMORY ACCESSES:\n--------------";
+        output += "\nNumber of elements = " + numberOfElements + "\n";
+        output += "\nMemory accesses = numberOfElements * memoryAccessesPerCycle = " + numberOfElements + " * "+ (int) spMemoryAccesses.getValue() +" = " + memoryAccesses + "\n";
+
+
+        output += "\nTLB:\n--------------";
         //calculating size of the program data segment
-        int totalDataSegmentWeight = numberOfElements * (int) spElementSize.getValue();
+        int dataSegmentSize = numberOfElements * (int) spElementSize.getValue();
+        output += "\nData segment size = numberOfElements * elementSize = "+numberOfElements+" * "+ spElementSize.getValue()+" = "+dataSegmentSize+"\n";
 
         //calculating the number of pages necessary to fit in the data segment
-        int dataPages = totalDataSegmentWeight / (int) spPageSize.getValue();
+        int dataPages = dataSegmentSize / (int) spPageSize.getValue();
+        output += "\nData pages = dataSegmentSize / pageSize = "+dataSegmentSize+" / "+spPageSize.getValue()+" = "+dataPages+"\n";
 
         //assuming that the text segment is only 1 page big
         int totalPages = dataPages + 1;
-
-        int memoryAccesses = numberOfElements * (int) spMemoryAccesses.getValue();
+        output += "\nTotal pages = dataPages + 1 (instruction page) = "+dataPages+" + 1 = "+totalPages+"\n";
 
         //missRate = pages / total memory access (assuming it's a cycle accesses = elements*accessesPerCycle)
         //multiplying by 100 to get it in percentage and not in rateo
         double missRate = totalPages * 100.0 / memoryAccesses ;
+        output += "\nMiss rate = totalPages / memoryAccesses = "+totalPages+" / "+memoryAccesses+" = "+missRate+"%\n";
 
-        String output = "";
-        output += "MEMORY ACCESSES:\n";
-        output += "Number of elements: " + numberOfElements + "\n";
-        output += "Memory accesses: " + memoryAccesses + "\n";
-        output += "\n";
-        output += "TLB:\n";
-        output += "Total data segment weight: " + totalDataSegmentWeight + "\n";
-        output += "Data pages: " + dataPages + "\n";
-        output += "Total pages: " + totalPages + "\n";
-        output += "Miss rate: " + totalPages + "\n";
+        output +="\nNOTE: This algorithm doesn't account for extra data in the data segment except for the Array/List/Tree" +
+                 "\n      So the data pages could be 1 more, keep that in mind and use this only as a guideline!";
 
         taResult.setText(output);
     }
