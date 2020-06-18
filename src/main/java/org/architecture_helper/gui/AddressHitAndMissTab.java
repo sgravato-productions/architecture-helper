@@ -1,11 +1,15 @@
 package org.architecture_helper.gui;
 
+import org.architecture_helper.backend.CacheSimulator;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class AddressHitAndMissTab extends RunnableTab {
 	//Constants
-	private final String DEFAULT_ADDRESSES = "36, 120, 48, 100, 4, 92, 84, 28, 76, 92, 64, 0, 96, 28, 32, 52, 92, 72, 16, 72, 124, 108, 64, 88";
+	private final String DEFAULT_ADDRESSES = "[24, 64, 164, 32, 208, 128, 44, 192, 432, 452, 88, 212, 504, 384, 32, 52, 292, 232, 388, 400, 404, 288, 40, 376]";
 
 	//Class fields
 	public JTextArea taResult;
@@ -82,6 +86,79 @@ public class AddressHitAndMissTab extends RunnableTab {
 
 	@Override
 	public void run() {
-		System.out.println("STARTING HIT/MISS CHECK");
+		outputClear();
+
+		//input data
+		int cache_type = (Integer)cacheTypeSpinner.getValue();
+		int cache_sets = (Integer)cacheSetsSpinner.getValue();
+		int cache_block_size = (Integer)blockSizeSpinner.getValue();
+
+		List<Integer> addresses = formatAddressList(addressesTextBox.getText());
+
+		//preparing for simulation
+		CacheSimulator cache = new CacheSimulator(cache_sets, cache_block_size,cache_type);
+
+		int hits = 0, misses = 0;
+
+		boolean hit;
+		int memBlock, cacheBlock, wayIndex;
+		output("ADDRESS\tBLOCK\tSET\tHIT/MISS");
+
+		//running simulation
+		for (int address : addresses) {
+			Object[] findResult = cache.find(address);
+			hit = (boolean)findResult[0];
+			memBlock = (int)findResult[1];
+			cacheBlock = (int)findResult[2];
+			wayIndex = (int)findResult[3];
+			if (hit) {
+				hits++;
+			} else {
+				misses++;
+			}
+
+			String wayIndexStr = cache_type == 1 ? "" : ("["+wayIndex+"]");
+			output(""+address+"\t"+memBlock+"\t"+cacheBlock+wayIndexStr+"\t"+(hit ? "Hit" : "Miss"));
+		}
+
+		output("HITS: "+hits +" MISSES: "+misses+"");
 	}
+
+	private void outputClear() {
+		taResult.setText("");
+	}
+
+	private void output(String text) {
+		output(text, "\r\n");
+	}
+
+	private void output(String text, String end) {
+		taResult.setText(taResult.getText() + text + end);
+	}
+
+	List<Integer> formatAddressList(String addressListString) {
+		List<Integer> addresses = new ArrayList<Integer>();
+		boolean lastWasNumeric = false;
+		String buffer = "";
+
+		for (char character : addressListString.toCharArray()) {
+			if (Character.isDigit(character)){
+				buffer += character;
+				lastWasNumeric = true;
+			} else {
+				if (lastWasNumeric) {
+					addresses.add(Integer.parseInt(buffer));
+					buffer = "";
+				}
+				lastWasNumeric = false;
+			}
+		}
+
+		if (lastWasNumeric) {
+			addresses.add(Integer.parseInt(buffer));
+		}
+
+		return addresses;
+	}
+
 }
