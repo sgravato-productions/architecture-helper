@@ -21,7 +21,6 @@ public class PipelineDrawerTab extends RunnableTab{
 	JTextArea taSourceCode;
 	JTextArea taResult;
 
-	private final Font textAreasFont = new Font("monospaced", Font.PLAIN, 12);
 	//endregion
 
 	//region Functionality
@@ -42,7 +41,7 @@ public class PipelineDrawerTab extends RunnableTab{
 		topPanel.add(new JLabel("Source:"), BorderLayout.NORTH);
 
 		taSourceCode = new JTextArea(CODE);
-		taSourceCode.setFont(textAreasFont);
+		taSourceCode.setFont(Main.MONOSPACED);
 		topPanel.add(new JScrollPane(taSourceCode), BorderLayout.CENTER);
 		//endregion
 
@@ -52,7 +51,7 @@ public class PipelineDrawerTab extends RunnableTab{
 		botPanel.add(new JLabel("Result:"), BorderLayout.NORTH);
 
 		taResult = new JTextArea();
-		taResult.setFont(textAreasFont);
+		taResult.setFont(Main.MONOSPACED);
 		botPanel.add(new JScrollPane(taResult), BorderLayout.CENTER);
 		//endregion
 

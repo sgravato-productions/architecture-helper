@@ -22,7 +22,7 @@ public class LRU {
     }
 
     public void pushToTop(int index) {
-        values.remove(index);
+        values.remove((Integer)index);
         values.add(0, index);
     }
 }
