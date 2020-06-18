@@ -6,6 +6,8 @@ import javax.swing.*;
 
 
 public class Main extends JFrame {
+	public final static Font MONOSPACED = new Font("monospaced", Font.PLAIN, 12);
+
 	private final JTabbedPane tabbedPane = new JTabbedPane();
 	private final JButton runButton;
 
@@ -28,8 +30,8 @@ public class Main extends JFrame {
       	//creating the tab control and the tabs
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.addTab("Pipeline Drawer", new PipelineDrawerTab());
 		tabbedPane.addTab("Address Hit / Miss", new AddressHitAndMissTab());
+		tabbedPane.addTab("Pipeline Drawer", new PipelineDrawerTab());
 
 		//creating the run button
 		runButton = new JButton("Run");
