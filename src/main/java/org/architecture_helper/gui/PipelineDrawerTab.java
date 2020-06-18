@@ -25,7 +25,7 @@ public class PipelineDrawerTab extends RunnableTab{
 
 	//region Functionality
 	private final String spaces = "     ";
-	private final String instructionSpaces = " ".repeat(extendInstruction("").length());
+	private final String instructionSpaces = new String(new char[extendInstruction("").length()]).replace("\0", " ");
 
 	private String currentLine = "";
 	private String dependencyLine = "";
@@ -101,7 +101,7 @@ public class PipelineDrawerTab extends RunnableTab{
 			square("M ");
 			square("WB", false);
 
-			String indentationSpaces = spaces.repeat(indentation);
+			String indentationSpaces = new String(new char[indentation]).replace("\0", spaces);
 
 			output(instructionSpaces + indentationSpaces + dependencyLine);
 			output(extendInstruction(instruction.name) + indentationSpaces + currentLine);
@@ -151,6 +151,6 @@ public class PipelineDrawerTab extends RunnableTab{
 	}
 
 	private String extendInstruction(String instruction, int len) {
-		return instruction + ":" + " ".repeat(len - instruction.length());
+		return instruction + ":" + new String(new char[len - instruction.length()]).replace("\0", " ");
 	}
 }
