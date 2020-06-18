@@ -57,8 +57,6 @@ public class TLBCacheCalculator extends RunnableTab {
 
         inputPanel.add(rbPanel);
         topPanel.add(inputPanel);
-
-        topPanel.add(new JScrollPane(inputPanel));
         //endregion
 
         //region creating bottom panel
