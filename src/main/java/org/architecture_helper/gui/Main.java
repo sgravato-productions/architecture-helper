@@ -30,6 +30,7 @@ public class Main extends JFrame {
 
 		tabbedPane.addTab("Pipeline Drawer", new PipelineDrawerTab());
 		tabbedPane.addTab("Address Hit / Miss", new AddressHitAndMissTab());
+		tabbedPane.addTab("TLB Cache Calc", new TLBCacheCalculator());
 
 		//creating the run button
 		runButton = new JButton("Run");
