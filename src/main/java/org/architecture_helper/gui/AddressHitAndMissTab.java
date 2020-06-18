@@ -29,12 +29,13 @@ public class AddressHitAndMissTab extends RunnableTab {
 
 		topPanel.setBorder(BorderFactory.createTitledBorder("Input:"));
 
+		//setting constraints for the first column
 		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridy = 0;
 		constraints.ipadx = 10;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.WEST;
 
-		constraints.gridy = 0;
 		topPanel.add(new JLabel("Addresses:"), constraints);
 		constraints.gridy++;
 		topPanel.add(new JLabel("Cache Type (ways):"), constraints);
@@ -43,12 +44,13 @@ public class AddressHitAndMissTab extends RunnableTab {
 		constraints.gridy++;
 		topPanel.add(new JLabel("Block size (byte):"), constraints);
 
+		//setting constraints for the second column
+		constraints.gridy = 0;
 		constraints.gridx = 1;
 		constraints.weightx = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.CENTER;
 
-		constraints.gridy = 0;
 		addressesTextBox = new JTextField(DEFAULT_ADDRESSES);
 		topPanel.add(addressesTextBox, constraints);
 

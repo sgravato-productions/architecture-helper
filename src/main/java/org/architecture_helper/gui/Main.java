@@ -14,6 +14,7 @@ public class Main extends JFrame {
    	public Main() {
    		//region FRAME
       	super("Architecture Helper");
+      	setMinimumSize(new Dimension(500,400));
 		setSize(950, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -31,8 +32,8 @@ public class Main extends JFrame {
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 
 		tabbedPane.addTab("Address Hit / Miss", new AddressHitAndMissTab());
-		tabbedPane.addTab("TLB Cache Calc", new TLBCacheCalculator());
 		tabbedPane.addTab("Pipeline Drawer", new PipelineDrawerTab());
+		tabbedPane.addTab("TLB miss rate", new TLBCacheCalculator());
 
 		//creating the run button
 		runButton = new JButton("Run");
