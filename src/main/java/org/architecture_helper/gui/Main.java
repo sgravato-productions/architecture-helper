@@ -1,17 +1,15 @@
 package org.architecture_helper.gui;
 
-import org.architecture_helper.gui.PipelineDrawerTab;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
 
-public class MagicGUI extends JFrame {
+public class Main extends JFrame {
 	private final JTabbedPane tabbedPane = new JTabbedPane();
 	private final JButton runButton;
 
-   	public MagicGUI() {
+   	public Main() {
    		//region FRAME
       	super("Architecture Helper");
 		setSize(950, 700);
@@ -51,6 +49,6 @@ public class MagicGUI extends JFrame {
 	};
 
     public static void main (String[] args) {
-    	new MagicGUI();
+    	new Main();
   	}
 }
