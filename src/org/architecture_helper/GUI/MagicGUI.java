@@ -38,6 +38,9 @@ public class MagicGUI extends JFrame {
 		contentPane.add(runButton, BorderLayout.SOUTH);
 		//endregion
 
+		revalidate();
+		repaint();
+
 		//region HOOKING EVENTS
 		runButton.addActionListener(runButtonEvent);
 		//endregion

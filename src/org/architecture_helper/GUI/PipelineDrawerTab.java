@@ -60,13 +60,10 @@ public class PipelineDrawerTab extends RunnableTab{
 		JSplitPane topBotSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, botPanel);
 		add(topBotSplit, BorderLayout.CENTER);
 
-		//setting split pane to 0.5
-		topBotSplit.setResizeWeight(0.5);
-
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				topBotSplit.setDividerLocation(0.5);
+				topBotSplit.setDividerLocation(250);
 			}
 		});
 		//endregion
