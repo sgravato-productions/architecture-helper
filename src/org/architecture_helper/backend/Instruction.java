@@ -67,7 +67,7 @@ public class Instruction {
     private String extractRegister(String instructionPart) {
         if (instructionPart.contains("(")) {
             int start = instructionPart.indexOf("(") + 1;
-            int length = instructionPart.indexOf(")") - start;
+            int length = instructionPart.indexOf(")");
             return instructionPart.substring(start, length);
         }
         return instructionPart;
