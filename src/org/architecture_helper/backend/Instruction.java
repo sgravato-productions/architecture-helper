@@ -89,5 +89,14 @@ public class Instruction {
         return output;
     }
 
-
+    @Override
+    public String toString() {
+        return name + " rd: " + rd + " rs: " + rs +
+                ", branch=" + branch +
+                ", regWrite=" + regWrite +
+                ", regRead=" + regRead +
+                ", memWrite=" + memWrite +
+                ", memRead=" + memRead +
+                '}';
+    }
 }
