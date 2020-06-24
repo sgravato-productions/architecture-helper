@@ -103,7 +103,7 @@ public class PipelineDrawerTab extends RunnableTab{
 			boolean forwardingMemToEx = instruction.checkDependency(prevInstructions.get(0));
 			boolean forwardingWbToEx = instruction.checkDependency(prevInstructions.get(1));
 
-			boolean stall = !previousStall && forwardingMemToEx && prevInstructions.get(0).memRead;
+			boolean stall = /*!previousStall &&*/ forwardingMemToEx && prevInstructions.get(0).memRead;
 
 			square("IF");
 			if (stall) {
